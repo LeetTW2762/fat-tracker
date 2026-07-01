@@ -1,12 +1,6 @@
-const CACHE='fat-tracker-v5';
-const ASSETS=[
-  '/fat-tracker/',
-  '/fat-tracker/index.html',
-  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js'
-];
+const CACHE='fat-tracker-v6';
 
 self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
   self.skipWaiting();
 });
 
@@ -18,13 +12,14 @@ self.addEventListener('activate',e=>{
 });
 
 self.addEventListener('fetch',e=>{
+  // 永遠先向網路要最新版，失敗才用快取
   e.respondWith(
-    caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
+    fetch(e.request).then(res=>{
       if(res.ok){
         const clone=res.clone();
         caches.open(CACHE).then(c=>c.put(e.request,clone));
       }
       return res;
-    }))
+    }).catch(()=>caches.match(e.request))
   );
 });
