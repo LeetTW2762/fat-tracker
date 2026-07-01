@@ -1,5 +1,9 @@
-const CACHE='fat-tracker-v1';
-const ASSETS=['/','/index.html','https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js'];
+const CACHE='fat-tracker-v2';
+const ASSETS=[
+  '/fat-tracker/',
+  '/fat-tracker/index.html',
+  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js'
+];
 
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
