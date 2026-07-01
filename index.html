@@ -230,11 +230,6 @@ const DAY=['日','一','二','三','四','五','六'];
 let recs=[];
 let homeChartInst=null,wChartInst=null,cChartInst=null,fChartInst=null;
 
-const SEED=[
-  {date:'2026-06-29',w:120,cal:1508},
-  {date:'2026-06-30',w:119.5,cal:1612},
-  {date:'2026-07-01',w:118.8,cal:807},
-];
 
 function getSetting(){
   return{
@@ -285,7 +280,6 @@ function updatePreview(){
 function load(){
   loadSettings();
   try{const s=localStorage.getItem('pwa_recs');if(s)recs=JSON.parse(s);}catch(e){}
-  if(recs.length===0)recs=SEED.map(r=>({...r}));
   document.getElementById('iDate').value=new Date().toISOString().slice(0,10);
   updatePreview();updateFormulaInfo();render();
 }
