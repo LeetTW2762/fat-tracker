@@ -208,10 +208,11 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
     <div class="setting-row">
       <div><div class="setting-lbl">活動係數</div><div class="setting-sub">依日常活動量</div></div>
       <select class="setting-select" id="sAct" onchange="saveSetting()">
-        <option value="1.2">1.2 久坐</option>
-        <option value="1.375">1.375 輕度</option>
-        <option value="1.55">1.55 中度</option>
-        <option value="1.725">1.725 高度</option>
+        <option value="1.2">1.2 完全久坐 — 辦公室久坐，幾乎沒運動</option>
+          <option value="1.375">1.375 輕度活動 — 偶爾健走、輕度健身（每週1–3天）</option>
+          <option value="1.55">1.55 中度活動 — 規律健身、工作中有走動（每週3–5天）</option>
+          <option value="1.725">1.725 高度活動 — 高強度訓練者、勞力工作（每週6–7天）</option>
+          <option value="1.9">1.9 極高活動 — 全職運動員、重勞動</option>
       </select>
     </div>
     <div class="setting-row">
