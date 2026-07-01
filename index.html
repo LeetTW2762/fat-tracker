@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="減脂追蹤"/>
+<meta name="theme-color" content="#ffffff"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<title>個人減脂追蹤器</title>
+<style>
+:root{
+  --bg:#f5f5f3;--card:#ffffff;--border:#e5e4de;--text:#0b0b0b;
+  --muted:#898781;--secondary:#52514e;--accent:#2a78d6;
+  --green:#1baf7a;--red:#e34948;--amber:#eda100;
+  --radius:10px;--safe-top:env(safe-area-inset-top);
+  --safe-bot:env(safe-area-inset-bottom);
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#111110;--card:#1c1c1a;--border:#2c2c2a;--text:#ffffff;
+  --muted:#636360;--secondary:#a0a09c;}
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100dvh;
+  padding-top:calc(var(--safe-top) + 56px);padding-bottom:calc(var(--safe-bot) + 16px)}
+/* Header */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);
+  padding:calc(var(--safe-top) + 8px) 16px 8px}
+@media(prefers-color-scheme:dark){.header{background:rgba(17,17,16,0.85)}}
+.header h1{font-size:17px;font-weight:600;letter-spacing:-0.3px}
+.header p{font-size:12px;color:var(--muted);margin-top:1px}
+/* Tabs */
+.tab-bar{display:flex;gap:0;border-bottom:0.5px solid var(--border);
+  background:var(--card);position:sticky;top:calc(var(--safe-top)+56px);z-index:50}
+.tab-btn{flex:1;padding:10px 4px;font-size:12px;font-weight:500;
+  color:var(--muted);border:none;background:transparent;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn.on{color:var(--accent);border-bottom-color:var(--accent)}
+/* Pages */
+.page{display:none;padding:16px}
+.page.on{display:block}
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);
+  border:0.5px solid var(--border);padding:14px 16px;margin-bottom:12px}
+.card-title{font-size:12px;font-weight:600;color:var(--secondary);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+/* KPI grid */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kpi{background:var(--card);border-radius:var(--radius);
+  border:0.5px solid var(--border);padding:12px 14px}
+.kpi-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.kpi-val{font-size:22px;font-weight:600;letter-spacing:-0.5px}
+.kpi-val.g{color:var(--green)}.kpi-val.r{color:var(--red)}
+/* Form */
+.form-group{margin-bottom:12px}
+.form-group label{font-size:12px;color:var(--secondary);display:block;margin-bottom:5px}
+.form-group input,.form-group select{
+  width:100%;padding:10px 12px;font-size:16px;border-radius:var(--radius);
+  border:0.5px solid var(--border);background:var(--bg);color:var(--text);
+  appearance:none;-webkit-appearance:none}
+.form-group input:focus,.form-group select:focus{
+  outline:none;border-color:var(--accent)}
+.hint-text{font-size:11px;color:var(--muted);margin-top:5px}
+.tdee-preview{font-size:13px;color:var(--accent);margin-top:6px;min-height:18px}
+/* Buttons */
+.btn{width:100%;padding:13px;border-radius:var(--radius);border:none;
+  font-size:16px;font-weight:600;cursor:pointer;margin-bottom:8px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-danger{background:transparent;color:var(--red);border:0.5px solid var(--red)}
+/* Table */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+th{font-size:10px;font-weight:600;color:var(--muted);text-align:left;
+  padding:6px 8px;border-bottom:0.5px solid var(--border);white-space:nowrap;
+  position:sticky;top:0;background:var(--card)}
+td{padding:8px 8px;border-bottom:0.5px solid var(--border);white-space:nowrap}
+td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
+.del-btn{font-size:14px;color:var(--muted);background:none;border:none;
+  cursor:pointer;padding:0 4px}
+.del-btn:active{color:var(--red)}
+.empty{text-align:center;padding:40px 16px;color:var(--muted);font-size:14px}
+/* Chart */
+.chart-wrap{position:relative;width:100%;height:220px;margin-top:4px}
+/* Settings rows */
+.setting-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:0.5px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-lbl{font-size:15px}
+.setting-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.setting-input{width:90px;padding:6px 10px;font-size:15px;
+  border-radius:8px;border:0.5px solid var(--border);
+  background:var(--bg);color:var(--text);text-align:right}
+.setting-select{padding:6px 10px;font-size:14px;
+  border-radius:8px;border:0.5px solid var(--border);
+  background:var(--bg);color:var(--text);appearance:none;-webkit-appearance:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>個人減脂追蹤器</h1>
+  <p id="headerSub">載入中...</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn on" onclick="switchTab('home',this)">總覽</button>
+  <button class="tab-btn" onclick="switchTab('input',this)">記錄</button>
+  <button class="tab-btn" onclick="switchTab('table',this)">數據</button>
+  <button class="tab-btn" onclick="switchTab('charts',this)">圖表</button>
+  <button class="tab-btn" onclick="switchTab('settings',this)">設定</button>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page on">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-lbl">目前體重</div><div class="kpi-val" id="k1">—</div></div>
+    <div class="kpi"><div class="kpi-lbl">目前已瘦</div><div class="kpi-val g" id="k2">—</div></div>
+    <div class="kpi"><div class="kpi-lbl">累計脂肪↓</div><div class="kpi-val g" id="k3">—</div></div>
+    <div class="kpi"><div class="kpi-lbl">期間總赤字</div><div class="kpi-val" id="k4">—</div></div>
+    <div class="kpi"><div class="kpi-lbl">每日平均赤字</div><div class="kpi-val" id="k6">—</div></div>
+    <div class="kpi"><div class="kpi-lbl">平均每週脂肪↓</div><div class="kpi-val g" id="k7">—</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">體重趨勢</div>
+    <div class="chart-wrap"><canvas id="homeChart" role="img" aria-label="體重趨勢"></canvas></div>
+  </div>
+</div>
+
+<!-- INPUT -->
+<div id="page-input" class="page">
+  <div class="card">
+    <div class="card-title">新增 / 更新記錄</div>
+    <div class="form-group">
+      <label>日期 <span style="color:var(--accent)">*</span></label>
+      <input type="date" id="iDate"/>
+    </div>
+    <div class="form-group">
+      <label>體重 (kg) — 選填</label>
+      <input type="number" id="iWeight" step="0.1" placeholder="留空則不更新" inputmode="decimal" oninput="updatePreview()"/>
+      <div class="tdee-preview" id="tdeePreview"></div>
+    </div>
+    <div class="form-group">
+      <label>攝取熱量 (kcal) — 選填</label>
+      <input type="number" id="iCal" placeholder="留空則不更新" inputmode="numeric"/>
+    </div>
+    <div class="hint-text" style="margin-bottom:14px">日期必填，體重與熱量各自選填，填哪格就更新哪格</div>
+    <button class="btn btn-primary" onclick="addRec()">更新記錄</button>
+    <button class="btn btn-danger" onclick="clearAll()">清除全部資料</button>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div id="page-table" class="page" style="padding:12px 8px">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>日期</th><th>星期</th><th>體重</th><th>每週增減</th>
+        <th>已瘦</th><th>攝取</th><th>TDEE</th><th>赤字</th>
+        <th>脂肪↓/日</th><th>前日差</th><th>水分變化</th><th>累計脂肪↓</th><th></th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="emptyMsg">尚無記錄，請先在「記錄」頁新增資料</div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div id="page-charts" class="page">
+  <div class="card">
+    <div class="card-title">體重趨勢</div>
+    <div class="chart-wrap"><canvas id="wChart" role="img" aria-label="體重趨勢"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">熱量（攝取 vs TDEE）</div>
+    <div class="chart-wrap"><canvas id="cChart" role="img" aria-label="熱量趨勢"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">累計脂肪下降</div>
+    <div class="chart-wrap"><canvas id="fChart" role="img" aria-label="累計脂肪"></canvas></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="page-settings" class="page">
+  <div class="card">
+    <div class="card-title">個人資料</div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">身高</div><div class="setting-sub">cm</div></div>
+      <input class="setting-input" type="number" id="sHeight" value="177" oninput="saveSetting()"/>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">年齡</div><div class="setting-sub">歲</div></div>
+      <input class="setting-input" type="number" id="sAge" value="36" oninput="saveSetting()"/>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">性別</div><div class="setting-sub">影響 TDEE 基礎值</div></div>
+      <select class="setting-select" id="sSex" onchange="saveSetting()">
+        <option value="5">男</option>
+        <option value="-161">女</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">活動係數</div><div class="setting-sub">依日常活動量</div></div>
+      <select class="setting-select" id="sAct" onchange="saveSetting()">
+        <option value="1.2">1.2 久坐</option>
+        <option value="1.375">1.375 輕度</option>
+        <option value="1.55">1.55 中度</option>
+        <option value="1.725">1.725 高度</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-lbl">脂肪熱量</div><div class="setting-sub">kcal/kg，預設 7700</div></div>
+      <input class="setting-input" type="number" id="sFat" value="7700" oninput="saveSetting()"/>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">TDEE 公式</div>
+    <div style="font-size:13px;color:var(--secondary);line-height:1.7" id="formulaInfo"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const DAY=['日','一','二','三','四','五','六'];
+let recs=[];
+let homeChartInst=null,wChartInst=null,cChartInst=null,fChartInst=null;
+
+const SEED=[
+  {date:'2026-06-29',w:120,cal:1508},
+  {date:'2026-06-30',w:119.5,cal:1612},
+  {date:'2026-07-01',w:118.8,cal:807},
+];
+
+function getSetting(){
+  return{
+    height:parseFloat(document.getElementById('sHeight').value)||177,
+    age:parseFloat(document.getElementById('sAge').value)||36,
+    sex:parseFloat(document.getElementById('sSex').value)||5,
+    act:parseFloat(document.getElementById('sAct').value)||1.2,
+    fatKcal:parseFloat(document.getElementById('sFat').value)||7700
+  };
+}
+
+function calcTDEE(w){
+  const s=getSetting();
+  if(!w)return null;
+  return (10*w+6.25*s.height-5*s.age+s.sex)*s.act;
+}
+
+function saveSetting(){
+  try{localStorage.setItem('pwa_cfg',JSON.stringify(getSetting()));}catch(e){}
+  updatePreview();updateFormulaInfo();render();
+}
+
+function loadSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem('pwa_cfg')||'{}');
+    if(s.height)document.getElementById('sHeight').value=s.height;
+    if(s.age)document.getElementById('sAge').value=s.age;
+    if(s.sex!==undefined)document.getElementById('sSex').value=s.sex;
+    if(s.act)document.getElementById('sAct').value=s.act;
+    if(s.fatKcal)document.getElementById('sFat').value=s.fatKcal;
+  }catch(e){}
+}
+
+function updateFormulaInfo(){
+  const s=getSetting();
+  const sample=calcTDEE(70);
+  document.getElementById('formulaInfo').innerHTML=
+    `(10 × 體重 + 6.25 × ${s.height} − 5 × ${s.age} + ${s.sex}) × ${s.act}<br><br>`+
+    `<span style="color:var(--muted)">範例（70 kg）：${sample?Math.round(sample):'-'} kcal</span>`;
+}
+
+function updatePreview(){
+  const w=parseFloat(document.getElementById('iWeight').value);
+  const tdee=w?calcTDEE(w):null;
+  document.getElementById('tdeePreview').textContent=tdee?'此體重 TDEE = '+Math.round(tdee)+' kcal':'';
+}
+
+function load(){
+  loadSettings();
+  try{const s=localStorage.getItem('pwa_recs');if(s)recs=JSON.parse(s);}catch(e){}
+  if(recs.length===0)recs=SEED.map(r=>({...r}));
+  document.getElementById('iDate').value=new Date().toISOString().slice(0,10);
+  updatePreview();updateFormulaInfo();render();
+}
+
+function save(){try{localStorage.setItem('pwa_recs',JSON.stringify(recs));}catch(e){}}
+
+function addRec(){
+  const date=document.getElementById('iDate').value;
+  if(!date){alert('請填入日期');return;}
+  const wRaw=document.getElementById('iWeight').value;
+  const calRaw=document.getElementById('iCal').value;
+  const hasW=wRaw!=='';
+  const hasCal=calRaw!=='';
+  if(!hasW&&!hasCal){alert('體重或攝取熱量至少填一項');return;}
+  const idx=recs.findIndex(r=>r.date===date);
+  if(idx>=0){
+    if(hasW)recs[idx].w=parseFloat(wRaw);
+    if(hasCal)recs[idx].cal=parseFloat(calRaw);
+  }else{
+    recs.push({date,w:hasW?parseFloat(wRaw):null,cal:hasCal?parseFloat(calRaw):null});
+  }
+  recs.sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById('iWeight').value='';
+  document.getElementById('iCal').value='';
+  document.getElementById('tdeePreview').textContent='';
+  save();render();
+  // 更新成功給個 feedback
+  const btn=document.querySelector('#page-input .btn-primary');
+  btn.textContent='已更新 ✓';
+  setTimeout(()=>btn.textContent='更新記錄',1500);
+}
+
+function delRec(i){
+  if(!confirm('刪除這筆記錄？'))return;
+  recs.splice(i,1);save();render();
+}
+
+function clearAll(){
+  if(!confirm('確定清除所有資料？這個動作無法復原'))return;
+  recs=[];save();render();
+}
+
+function compute(){
+  const s=getSetting();
+  const base0=recs.find(r=>r.w!=null)?.w||null;
+  let cumFat=0,cumDef=0,defDays=0;
+  return recs.map((r,i)=>{
+    const prevW=recs.slice(0,i).reverse().find(x=>x.w!=null);
+    const tdee=r.w?calcTDEE(r.w):null;
+    const wDiff=(r.w!=null&&prevW)?+(r.w-prevW.w).toFixed(2):null;
+    const deficit=(r.cal!=null&&tdee!=null)?tdee-r.cal:null;
+    const fatDay=deficit!=null?deficit/s.fatKcal:null;
+    const waterChg=(wDiff!=null&&fatDay!=null)?+(wDiff-(-fatDay)).toFixed(4):null;
+    if(fatDay!=null)cumFat+=fatDay;
+    if(deficit!=null){cumDef+=deficit;defDays++;}
+    const slim=(base0!=null&&r.w!=null)?+(base0-r.w).toFixed(2):null;
+    const d=new Date(r.date+'T00:00:00');
+    const dow=d.getDay();
+    let weeklyWeight=null;
+    if(dow===1&&i>0){
+      const pm=recs.slice(0,i).reverse().find(x=>new Date(x.date+'T00:00:00').getDay()===1&&x.w!=null);
+      if(pm&&r.w!=null)weeklyWeight=+(r.w-pm.w).toFixed(2);
+    }
+    return{date:r.date,dow,w:r.w,slim,wDiff,cal:r.cal,tdee,deficit,
+      fatDay:fatDay!=null?+fatDay.toFixed(4):null,
+      waterChg,cumFat:+cumFat.toFixed(4),
+      cumDef:+cumDef.toFixed(0),defDays,weeklyWeight};
+  });
+}
+
+function render(){
+  const rows=compute();
+  // Table
+  const tbody=document.getElementById('tbody');
+  document.getElementById('emptyMsg').style.display=rows.length?'none':'block';
+  tbody.innerHTML='';
+  [...rows].reverse().forEach((r,ri)=>{
+    const i=rows.length-1-ri;
+    const tr=document.createElement('tr');
+    const wd=r.wDiff!=null?(r.wDiff>0?'+':'')+r.wDiff.toFixed(2):'—';
+    const wdC=r.wDiff==null?'':(r.wDiff<0?'g':'r');
+    const defStr=r.deficit!=null?Math.round(r.deficit).toLocaleString():'—';
+    const defC=r.deficit==null?'':(r.deficit>0?'g':'r');
+    const ww=r.weeklyWeight!=null?(r.weeklyWeight<0?r.weeklyWeight.toFixed(2):'▲'+r.weeklyWeight.toFixed(2)):'';
+    const wwC=r.weeklyWeight!=null?(r.weeklyWeight<0?'g':'r'):'';
+    tr.innerHTML=`
+      <td>${r.date.slice(5)}</td><td>星期${DAY[r.dow]}</td>
+      <td>${r.w!=null?r.w.toFixed(1):'—'}</td>
+      <td class="${wwC}">${ww}</td>
+      <td class="g">${r.slim!=null&&r.slim>0?'-'+r.slim.toFixed(2):'—'}</td>
+      <td>${r.cal!=null?Math.round(r.cal).toLocaleString():'—'}</td>
+      <td class="muted">${r.tdee!=null?Math.round(r.tdee):'—'}</td>
+      <td class="${defC}">${defStr}</td>
+      <td class="${r.fatDay!=null&&r.fatDay>0?'g':''}">${r.fatDay!=null?r.fatDay.toFixed(4):'—'}</td>
+      <td class="${wdC}">${wd}</td>
+      <td>${r.waterChg!=null?r.waterChg.toFixed(4):'—'}</td>
+      <td class="g">${r.cumFat>0?r.cumFat.toFixed(3):'—'}</td>
+      <td><button class="del-btn" onclick="delRec(${i})">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  // KPI
+  if(rows.length){
+    const last=rows[rows.length-1];
+    const lastW=rows.slice().reverse().find(r=>r.w!=null);
+    const base=recs.find(r=>r.w!=null)?.w;
+    document.getElementById('k1').textContent=lastW?lastW.w.toFixed(1)+' kg':'—';
+    document.getElementById('k2').textContent=(base&&lastW&&base!==lastW.w)?'-'+(base-lastW.w).toFixed(2)+' kg':'—';
+    document.getElementById('k3').textContent=last.cumFat>0?'-'+last.cumFat.toFixed(3)+' kg':'—';
+    document.getElementById('k4').textContent=last.cumDef?last.cumDef.toLocaleString()+' kcal':'—';
+    const avg=last.defDays>0?last.cumDef/last.defDays:null;
+    document.getElementById('k6').textContent=avg?Math.round(avg).toLocaleString()+' kcal':'—';
+    const weeks=rows.length/7;
+    document.getElementById('k7').textContent=(weeks>0&&last.cumFat>0)?'-'+(last.cumFat/weeks).toFixed(3)+' kg/週':'—';
+    document.getElementById('headerSub').textContent=lastW?'體重 '+lastW.w.toFixed(1)+' kg｜'+rows.length+' 天記錄':'';
+  }
+  updateCharts(rows);
+}
+
+function mkLine(ctx,labels,datasets){
+  return new Chart(ctx,{type:'line',data:{labels,datasets},options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:datasets.length>1,labels:{font:{size:11},boxWidth:10,padding:12}}},
+    scales:{
+      x:{ticks:{color:'#898781',font:{size:10},maxTicksLimit:10},grid:{color:'rgba(128,128,128,0.08)'}},
+      y:{ticks:{color:'#898781',font:{size:10}},grid:{color:'rgba(128,128,128,0.08)'}}
+    }
+  }});
+}
+
+function updateCharts(rows){
+  [homeChartInst,wChartInst,cChartInst,fChartInst].forEach(c=>{if(c)c.destroy();});
+  const lbl=rows.map(r=>r.date.slice(5));
+  const wData=rows.map(r=>r.w);
+  homeChartInst=mkLine(document.getElementById('homeChart').getContext('2d'),lbl,[
+    {label:'體重',data:wData,borderColor:'#2a78d6',backgroundColor:'rgba(42,120,214,0.08)',
+     borderWidth:2,pointRadius:2,fill:true,tension:0.3,spanGaps:true}]);
+  wChartInst=mkLine(document.getElementById('wChart').getContext('2d'),lbl,[
+    {label:'體重',data:wData,borderColor:'#2a78d6',backgroundColor:'rgba(42,120,214,0.08)',
+     borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
+  cChartInst=mkLine(document.getElementById('cChart').getContext('2d'),lbl,[
+    {label:'攝取',data:rows.map(r=>r.cal),borderColor:'#1baf7a',borderWidth:2,pointRadius:3,fill:false,tension:0.3,spanGaps:true},
+    {label:'TDEE',data:rows.map(r=>r.tdee?Math.round(r.tdee):null),borderColor:'#e34948',borderWidth:2,pointRadius:3,fill:false,tension:0.3,borderDash:[5,3],spanGaps:true}
+  ]);
+  fChartInst=mkLine(document.getElementById('fChart').getContext('2d'),lbl,[
+    {label:'累計脂肪↓',data:rows.map(r=>r.cumFat>0?+r.cumFat.toFixed(3):null),
+     borderColor:'#eda100',backgroundColor:'rgba(237,161,0,0.08)',
+     borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  btn.classList.add('on');
+}
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+load();
+</script>
+</body>
+</html>
