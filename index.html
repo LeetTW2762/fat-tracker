@@ -27,7 +27,6 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
   background:var(--bg);color:var(--text);min-height:100dvh;
   padding-top:calc(var(--safe-top) + 56px);padding-bottom:calc(var(--safe-bot) + 16px)}
-/* Header */
 .header{position:fixed;top:0;left:0;right:0;z-index:100;
   background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);
@@ -35,45 +34,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;
 @media(prefers-color-scheme:dark){.header{background:rgba(17,17,16,0.85)}}
 .header h1{font-size:17px;font-weight:600;letter-spacing:-0.3px}
 .header p{font-size:12px;color:var(--muted);margin-top:1px}
-/* Tabs */
 .tab-bar{display:flex;gap:0;border-bottom:0.5px solid var(--border);
   background:var(--card);position:sticky;top:calc(var(--safe-top)+56px);z-index:50}
 .tab-btn{flex:1;padding:10px 4px;font-size:12px;font-weight:500;
   color:var(--muted);border:none;background:transparent;cursor:pointer;
   border-bottom:2px solid transparent;transition:all .15s}
 .tab-btn.on{color:var(--accent);border-bottom-color:var(--accent)}
-/* Pages */
 .page{display:none;padding:16px}
 .page.on{display:block}
-/* Cards */
 .card{background:var(--card);border-radius:var(--radius);
   border:0.5px solid var(--border);padding:14px 16px;margin-bottom:12px}
 .card-title{font-size:12px;font-weight:600;color:var(--secondary);
   text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
-/* KPI grid */
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .kpi{background:var(--card);border-radius:var(--radius);
   border:0.5px solid var(--border);padding:12px 14px}
 .kpi-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
 .kpi-val{font-size:22px;font-weight:600;letter-spacing:-0.5px}
 .kpi-val.g{color:var(--green)}.kpi-val.r{color:var(--red)}
-/* Form */
 .form-group{margin-bottom:12px}
 .form-group label{font-size:12px;color:var(--secondary);display:block;margin-bottom:5px}
 .form-group input,.form-group select{
   width:100%;padding:10px 12px;font-size:16px;border-radius:var(--radius);
   border:0.5px solid var(--border);background:var(--bg);color:var(--text);
   appearance:none;-webkit-appearance:none}
-.form-group input:focus,.form-group select:focus{
-  outline:none;border-color:var(--accent)}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent)}
 .hint-text{font-size:11px;color:var(--muted);margin-top:5px}
 .tdee-preview{font-size:13px;color:var(--accent);margin-top:6px;min-height:18px}
-/* Buttons */
 .btn{width:100%;padding:13px;border-radius:var(--radius);border:none;
   font-size:16px;font-weight:600;cursor:pointer;margin-bottom:8px}
 .btn-primary{background:var(--accent);color:#fff}
+.btn-google{background:#fff;color:#444;border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-danger{background:transparent;color:var(--red);border:0.5px solid var(--red)}
-/* Table */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
 th{font-size:10px;font-weight:600;color:var(--muted);text-align:left;
@@ -81,13 +73,10 @@ th{font-size:10px;font-weight:600;color:var(--muted);text-align:left;
   position:sticky;top:0;background:var(--card)}
 td{padding:8px 8px;border-bottom:0.5px solid var(--border);white-space:nowrap}
 td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
-.del-btn{font-size:14px;color:var(--muted);background:none;border:none;
-  cursor:pointer;padding:0 4px}
+.del-btn{font-size:14px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0 4px}
 .del-btn:active{color:var(--red)}
 .empty{text-align:center;padding:40px 16px;color:var(--muted);font-size:14px}
-/* Chart */
 .chart-wrap{position:relative;width:100%;height:220px;margin-top:4px}
-/* Settings rows */
 .setting-row{display:flex;align-items:center;justify-content:space-between;
   padding:10px 0;border-bottom:0.5px solid var(--border)}
 .setting-row:last-child{border-bottom:none}
@@ -96,12 +85,32 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
 .setting-input{width:90px;padding:6px 10px;font-size:15px;
   border-radius:8px;border:0.5px solid var(--border);
   background:var(--bg);color:var(--text);text-align:right}
-.setting-select{padding:6px 10px;font-size:14px;
+.setting-select{padding:6px 10px;font-size:13px;max-width:200px;
   border-radius:8px;border:0.5px solid var(--border);
   background:var(--bg);color:var(--text);appearance:none;-webkit-appearance:none}
+.sync-status{font-size:11px;color:var(--muted);text-align:center;padding:6px 0}
+.sync-status.ok{color:var(--green)}
+.sync-status.err{color:var(--red)}
+/* Login overlay */
+.login-overlay{position:fixed;inset:0;background:var(--bg);z-index:999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px}
+.login-overlay h2{font-size:22px;font-weight:600;margin-bottom:8px}
+.login-overlay p{font-size:14px;color:var(--muted);text-align:center;margin-bottom:32px}
+.login-icon{font-size:64px;margin-bottom:16px}
 </style>
 </head>
 <body>
+
+<!-- Login Overlay -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-icon">🔥</div>
+  <h2>個人減脂追蹤器</h2>
+  <p>登入後可在手機與電腦之間同步資料</p>
+  <button class="btn btn-google" id="loginBtn" style="max-width:280px">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z"/></svg>
+    使用 Google 帳號登入
+  </button>
+</div>
 
 <div class="header">
   <h1>個人減脂追蹤器</h1>
@@ -126,6 +135,7 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
     <div class="kpi"><div class="kpi-lbl">每日平均赤字</div><div class="kpi-val" id="k6">—</div></div>
     <div class="kpi"><div class="kpi-lbl">平均每週脂肪↓</div><div class="kpi-val g" id="k7">—</div></div>
   </div>
+  <div id="syncStatus" class="sync-status"></div>
   <div class="card">
     <div class="card-title">體重趨勢</div>
     <div class="chart-wrap"><canvas id="homeChart" role="img" aria-label="體重趨勢"></canvas></div>
@@ -150,7 +160,7 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
       <input type="number" id="iCal" placeholder="留空則不更新" inputmode="numeric"/>
     </div>
     <div class="hint-text" style="margin-bottom:14px">日期必填，體重與熱量各自選填，填哪格就更新哪格</div>
-    <button class="btn btn-primary" onclick="addRec()">更新記錄</button>
+    <button class="btn btn-primary" id="saveBtn" onclick="addRec()">更新記錄</button>
     <button class="btn btn-danger" onclick="clearAll()">清除全部資料</button>
   </div>
 </div>
@@ -189,6 +199,13 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
 <!-- SETTINGS -->
 <div id="page-settings" class="page">
   <div class="card">
+    <div class="card-title">帳號</div>
+    <div class="setting-row">
+      <div><div class="setting-lbl" id="userName">未登入</div><div class="setting-sub" id="userEmail"></div></div>
+      <button onclick="logout()" style="font-size:13px;padding:6px 12px;border-radius:8px;border:0.5px solid var(--border);background:transparent;color:var(--red);cursor:pointer">登出</button>
+    </div>
+  </div>
+  <div class="card">
     <div class="card-title">個人資料</div>
     <div class="setting-row">
       <div><div class="setting-lbl">身高</div><div class="setting-sub">cm</div></div>
@@ -209,10 +226,10 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
       <div><div class="setting-lbl">活動係數</div><div class="setting-sub">依日常活動量</div></div>
       <select class="setting-select" id="sAct" onchange="saveSetting()">
         <option value="1.2">1.2 完全久坐 — 辦公室久坐，幾乎沒運動</option>
-          <option value="1.375">1.375 輕度活動 — 偶爾健走、輕度健身（每週1–3天）</option>
-          <option value="1.55">1.55 中度活動 — 規律健身、工作中有走動（每週3–5天）</option>
-          <option value="1.725">1.725 高度活動 — 高強度訓練者、勞力工作（每週6–7天）</option>
-          <option value="1.9">1.9 極高活動 — 全職運動員、重勞動</option>
+        <option value="1.375">1.375 輕度活動 — 偶爾健走、輕度健身（每週1–3天）</option>
+        <option value="1.55">1.55 中度活動 — 規律健身、工作中有走動（每週3–5天）</option>
+        <option value="1.725">1.725 高度活動 — 高強度訓練者、勞力工作（每週6–7天）</option>
+        <option value="1.9">1.9 極高活動 — 全職運動員、重勞動</option>
       </select>
     </div>
     <div class="setting-row">
@@ -227,12 +244,63 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, orderBy, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD0ituv9D4mmnih53MApRSG5gS67TbxoV8",
+  authDomain: "fat-tracker-c8ba2.firebaseapp.com",
+  projectId: "fat-tracker-c8ba2",
+  storageBucket: "fat-tracker-c8ba2.firebasestorage.app",
+  messagingSenderId: "845992264329",
+  appId: "1:845992264329:web:b91e717644060abcdf7c58"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 const DAY=['日','一','二','三','四','五','六'];
 let recs=[];
+let currentUser=null;
+let unsubscribe=null;
 let homeChartInst=null,wChartInst=null,cChartInst=null,fChartInst=null;
 
+// Auth
+document.getElementById('loginBtn').onclick = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) { alert('登入失敗：'+e.message); }
+};
 
+window.logout = async () => {
+  if(confirm('確定登出？')) { await signOut(auth); }
+};
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if(user) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('userName').textContent = user.displayName || '使用者';
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('headerSub').textContent = user.displayName;
+    loadSettings();
+    subscribeRecords();
+  } else {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    if(unsubscribe) { unsubscribe(); unsubscribe=null; }
+    recs = [];
+  }
+});
+
+function userPath() {
+  return `users/${currentUser.uid}`;
+}
+
+// Settings
 function getSetting(){
   return{
     height:parseFloat(document.getElementById('sHeight').value)||177,
@@ -249,20 +317,29 @@ function calcTDEE(w){
   return (10*w+6.25*s.height-5*s.age+s.sex)*s.act;
 }
 
-function saveSetting(){
-  try{localStorage.setItem('pwa_cfg',JSON.stringify(getSetting()));}catch(e){}
+window.saveSetting = async () => {
+  if(!currentUser)return;
+  const s=getSetting();
+  try {
+    await setDoc(doc(db, userPath(), 'settings'), s);
+  } catch(e){}
   updatePreview();updateFormulaInfo();render();
-}
+};
 
-function loadSettings(){
-  try{
-    const s=JSON.parse(localStorage.getItem('pwa_cfg')||'{}');
-    if(s.height)document.getElementById('sHeight').value=s.height;
-    if(s.age)document.getElementById('sAge').value=s.age;
-    if(s.sex!==undefined)document.getElementById('sSex').value=s.sex;
-    if(s.act)document.getElementById('sAct').value=s.act;
-    if(s.fatKcal)document.getElementById('sFat').value=s.fatKcal;
-  }catch(e){}
+async function loadSettings(){
+  if(!currentUser)return;
+  try {
+    const snap = await getDoc(doc(db, userPath(), 'settings'));
+    if(snap.exists()){
+      const s=snap.data();
+      if(s.height)document.getElementById('sHeight').value=s.height;
+      if(s.age)document.getElementById('sAge').value=s.age;
+      if(s.sex!==undefined)document.getElementById('sSex').value=s.sex;
+      if(s.act)document.getElementById('sAct').value=s.act;
+      if(s.fatKcal)document.getElementById('sFat').value=s.fatKcal;
+    }
+  } catch(e){}
+  updatePreview();updateFormulaInfo();
 }
 
 function updateFormulaInfo(){
@@ -273,22 +350,34 @@ function updateFormulaInfo(){
     `<span style="color:var(--muted)">範例（70 kg）：${sample?Math.round(sample):'-'} kcal</span>`;
 }
 
-function updatePreview(){
+window.updatePreview = () => {
   const w=parseFloat(document.getElementById('iWeight').value);
   const tdee=w?calcTDEE(w):null;
   document.getElementById('tdeePreview').textContent=tdee?'此體重 TDEE = '+Math.round(tdee)+' kcal':'';
+};
+
+// Records - realtime sync
+function subscribeRecords(){
+  if(!currentUser)return;
+  const q = query(collection(db, userPath(), 'records'), orderBy('date','asc'));
+  unsubscribe = onSnapshot(q, snap => {
+    recs = snap.docs.map(d=>d.data());
+    setSyncStatus('已同步','ok');
+    render();
+  }, err => {
+    setSyncStatus('同步失敗','err');
+  });
 }
 
-function load(){
-  loadSettings();
-  try{const s=localStorage.getItem('pwa_recs');if(s)recs=JSON.parse(s);}catch(e){}
-  document.getElementById('iDate').value=new Date().toISOString().slice(0,10);
-  updatePreview();updateFormulaInfo();render();
+function setSyncStatus(msg, type){
+  const el=document.getElementById('syncStatus');
+  el.textContent=msg;
+  el.className='sync-status '+(type||'');
+  if(type==='ok') setTimeout(()=>el.textContent='',3000);
 }
 
-function save(){try{localStorage.setItem('pwa_recs',JSON.stringify(recs));}catch(e){}}
-
-function addRec(){
+window.addRec = async () => {
+  if(!currentUser)return;
   const date=document.getElementById('iDate').value;
   if(!date){alert('請填入日期');return;}
   const wRaw=document.getElementById('iWeight').value;
@@ -296,33 +385,41 @@ function addRec(){
   const hasW=wRaw!=='';
   const hasCal=calRaw!=='';
   if(!hasW&&!hasCal){alert('體重或攝取熱量至少填一項');return;}
-  const idx=recs.findIndex(r=>r.date===date);
-  if(idx>=0){
-    if(hasW)recs[idx].w=parseFloat(wRaw);
-    if(hasCal)recs[idx].cal=parseFloat(calRaw);
-  }else{
-    recs.push({date,w:hasW?parseFloat(wRaw):null,cal:hasCal?parseFloat(calRaw):null});
-  }
-  recs.sort((a,b)=>a.date.localeCompare(b.date));
-  document.getElementById('iWeight').value='';
-  document.getElementById('iCal').value='';
-  document.getElementById('tdeePreview').textContent='';
-  save();render();
-  // 更新成功給個 feedback
-  const btn=document.querySelector('#page-input .btn-primary');
-  btn.textContent='已更新 ✓';
-  setTimeout(()=>btn.textContent='更新記錄',1500);
-}
 
-function delRec(i){
+  const existing=recs.find(r=>r.date===date)||{};
+  const obj={
+    date,
+    w: hasW ? parseFloat(wRaw) : (existing.w||null),
+    cal: hasCal ? parseFloat(calRaw) : (existing.cal||null)
+  };
+
+  try {
+    setSyncStatus('儲存中...','');
+    await setDoc(doc(db, userPath(), 'records', date), obj);
+    document.getElementById('iWeight').value='';
+    document.getElementById('iCal').value='';
+    document.getElementById('tdeePreview').textContent='';
+    const btn=document.getElementById('saveBtn');
+    btn.textContent='已儲存 ✓';
+    setTimeout(()=>btn.textContent='更新記錄',1500);
+  } catch(e){ alert('儲存失敗：'+e.message); }
+};
+
+window.delRec = async (date) => {
   if(!confirm('刪除這筆記錄？'))return;
-  recs.splice(i,1);save();render();
-}
+  try {
+    await deleteDoc(doc(db, userPath(), 'records', date));
+  } catch(e){ alert('刪除失敗'); }
+};
 
-function clearAll(){
+window.clearAll = async () => {
   if(!confirm('確定清除所有資料？這個動作無法復原'))return;
-  recs=[];save();render();
-}
+  try {
+    const batch = writeBatch(db);
+    recs.forEach(r => batch.delete(doc(db, userPath(), 'records', r.date)));
+    await batch.commit();
+  } catch(e){ alert('清除失敗'); }
+};
 
 function compute(){
   const s=getSetting();
@@ -354,12 +451,10 @@ function compute(){
 
 function render(){
   const rows=compute();
-  // Table
   const tbody=document.getElementById('tbody');
   document.getElementById('emptyMsg').style.display=rows.length?'none':'block';
   tbody.innerHTML='';
-  [...rows].reverse().forEach((r,ri)=>{
-    const i=rows.length-1-ri;
+  [...rows].reverse().forEach((r)=>{
     const tr=document.createElement('tr');
     const wd=r.wDiff!=null?(r.wDiff>0?'+':'')+r.wDiff.toFixed(2):'—';
     const wdC=r.wDiff==null?'':(r.wDiff<0?'g':'r');
@@ -379,11 +474,10 @@ function render(){
       <td class="${wdC}">${wd}</td>
       <td>${r.waterChg!=null?r.waterChg.toFixed(4):'—'}</td>
       <td class="g">${r.cumFat>0?r.cumFat.toFixed(3):'—'}</td>
-      <td><button class="del-btn" onclick="delRec(${i})">✕</button></td>
+      <td><button class="del-btn" onclick="delRec('${r.date}')">✕</button></td>
     `;
     tbody.appendChild(tr);
   });
-  // KPI
   if(rows.length){
     const last=rows[rows.length-1];
     const lastW=rows.slice().reverse().find(r=>r.w!=null);
@@ -396,7 +490,7 @@ function render(){
     document.getElementById('k6').textContent=avg?Math.round(avg).toLocaleString()+' kcal':'—';
     const weeks=rows.length/7;
     document.getElementById('k7').textContent=(weeks>0&&last.cumFat>0)?'-'+(last.cumFat/weeks).toFixed(3)+' kg/週':'—';
-    document.getElementById('headerSub').textContent=lastW?'體重 '+lastW.w.toFixed(1)+' kg｜'+rows.length+' 天記錄':'';
+    document.getElementById('headerSub').textContent=(currentUser?.displayName||'')+(lastW?' ｜ '+lastW.w.toFixed(1)+' kg':'');
   }
   updateCharts(rows);
 }
@@ -417,33 +511,30 @@ function updateCharts(rows){
   const lbl=rows.map(r=>r.date.slice(5));
   const wData=rows.map(r=>r.w);
   homeChartInst=mkLine(document.getElementById('homeChart').getContext('2d'),lbl,[
-    {label:'體重',data:wData,borderColor:'#2a78d6',backgroundColor:'rgba(42,120,214,0.08)',
-     borderWidth:2,pointRadius:2,fill:true,tension:0.3,spanGaps:true}]);
+    {label:'體重',data:wData,borderColor:'#2a78d6',backgroundColor:'rgba(42,120,214,0.08)',borderWidth:2,pointRadius:2,fill:true,tension:0.3,spanGaps:true}]);
   wChartInst=mkLine(document.getElementById('wChart').getContext('2d'),lbl,[
-    {label:'體重',data:wData,borderColor:'#2a78d6',backgroundColor:'rgba(42,120,214,0.08)',
-     borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
+    {label:'體重',data:wData,borderColor:'#2a78d6',backgroundColor:'rgba(42,120,214,0.08)',borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
   cChartInst=mkLine(document.getElementById('cChart').getContext('2d'),lbl,[
     {label:'攝取',data:rows.map(r=>r.cal),borderColor:'#1baf7a',borderWidth:2,pointRadius:3,fill:false,tension:0.3,spanGaps:true},
     {label:'TDEE',data:rows.map(r=>r.tdee?Math.round(r.tdee):null),borderColor:'#e34948',borderWidth:2,pointRadius:3,fill:false,tension:0.3,borderDash:[5,3],spanGaps:true}
   ]);
   fChartInst=mkLine(document.getElementById('fChart').getContext('2d'),lbl,[
-    {label:'累計脂肪↓',data:rows.map(r=>r.cumFat>0?+r.cumFat.toFixed(3):null),
-     borderColor:'#eda100',backgroundColor:'rgba(237,161,0,0.08)',
-     borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
+    {label:'累計脂肪↓',data:rows.map(r=>r.cumFat>0?+r.cumFat.toFixed(3):null),borderColor:'#eda100',backgroundColor:'rgba(237,161,0,0.08)',borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
 }
 
-function switchTab(name,btn){
+window.switchTab = (name,btn) => {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
   document.getElementById('page-'+name).classList.add('on');
   btn.classList.add('on');
-}
+};
+
+document.getElementById('iDate').value=new Date().toISOString().slice(0,10);
+updateFormulaInfo();
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
-
-load();
 </script>
 </body>
 </html>
