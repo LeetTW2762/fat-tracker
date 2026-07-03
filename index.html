@@ -103,6 +103,8 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
 .login-overlay h2{font-size:22px;font-weight:600;margin-bottom:8px}
 .login-overlay p{font-size:14px;color:var(--muted);text-align:center;margin-bottom:32px}
 .login-icon{margin-bottom:16px;display:flex;justify-content:center}
+
+.mosaic{filter:blur(8px);pointer-events:none;user-select:none}
 </style>
 </head>
 <body>
@@ -146,7 +148,7 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
 <!-- HOME -->
 <div id="page-home" class="page on">
   <div class="kpi-grid">
-    <div class="kpi"><div class="kpi-lbl">目前體重</div><div class="kpi-val" id="k1">—</div></div>
+    <div class="kpi" id="k1wrap" onclick="toggleMosaic()" style="cursor:pointer;user-select:none"><div class="kpi-lbl">目前體重 <span id="mosaicIcon" style="font-size:10px;color:var(--muted)">👁 點擊隱藏</span></div><div class="kpi-val" id="k1">—</div></div>
     <div class="kpi"><div class="kpi-lbl">目前已瘦</div><div class="kpi-val g" id="k2">—</div></div>
     <div class="kpi"><div class="kpi-lbl">累計脂肪↓</div><div class="kpi-val g" id="k3">—</div></div>
     <div class="kpi"><div class="kpi-lbl">期間總赤字</div><div class="kpi-val" id="k4">—</div></div>
@@ -539,6 +541,14 @@ function updateCharts(rows){
   fChartInst=mkLine(document.getElementById('fChart').getContext('2d'),lbl,[
     {label:'累計脂肪↓',data:rows.map(r=>r.cumFat>0?+r.cumFat.toFixed(3):null),borderColor:'#eda100',backgroundColor:'rgba(237,161,0,0.08)',borderWidth:2,pointRadius:3,fill:true,tension:0.3,spanGaps:true}]);
 }
+
+
+window.toggleMosaic = () => {
+  const el = document.getElementById('k1');
+  const icon = document.getElementById('mosaicIcon');
+  const isMosaic = el.classList.toggle('mosaic');
+  icon.textContent = isMosaic ? '🙈 點擊顯示' : '👁 點擊隱藏';
+};
 
 window.switchTab = (name,btn) => {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
