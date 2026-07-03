@@ -156,7 +156,7 @@ td.g{color:var(--green)}td.r{color:var(--red)}td.muted{color:var(--muted)}
     <div class="kpi"><div class="kpi-lbl">平均每週脂肪↓</div><div class="kpi-val g" id="k7">—</div></div>
   </div>
   <div id="syncStatus" class="sync-status"></div>
-  <div class="card">
+  <div class="card" id="homeChartCard">
     <div class="card-title">體重趨勢</div>
     <div class="chart-wrap"><canvas id="homeChart" role="img" aria-label="體重趨勢"></canvas></div>
   </div>
@@ -545,8 +545,10 @@ function updateCharts(rows){
 
 window.toggleMosaic = () => {
   const el = document.getElementById('k1');
+  const chart = document.getElementById('homeChartCard');
   const icon = document.getElementById('mosaicIcon');
   const isMosaic = el.classList.toggle('mosaic');
+  if(chart) chart.classList.toggle('mosaic', isMosaic);
   icon.textContent = isMosaic ? '🙈 點擊顯示' : '👁 點擊隱藏';
 };
 
